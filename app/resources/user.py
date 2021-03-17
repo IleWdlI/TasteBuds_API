@@ -11,14 +11,14 @@ _user_parser.add_argument('password', type=str, required=True)
 class User(Resource):
     @staticmethod
     def get(user_id):
-        user = UserModel.find_by_id(user_id)
+        user = UserModel.query.filter_by(id=user_id).first()
         if not user:
             return {'message': 'User not found'}, 404
         return user.json()
 
     @staticmethod
     def delete(user_id):
-        user = UserModel.find_by_id(user_id)
+        user = UserModel.query.filter_by(id=user_id).first()
         if not user:
             return {'message': 'User not found'}, 404
         user.delete_from_db()
@@ -30,7 +30,7 @@ class UserRegister(Resource):
     def post():
         data = _user_parser.parse_args()
 
-        if UserModel.find_by_name(data['username']):
+        if UserModel.query.filter_by(data['username']).first():
             return {'message': 'A user with that name already exists'}, 400
 
         user = UserModel(**data)
@@ -42,7 +42,7 @@ class UserLogin(Resource):
     @staticmethod
     def post():
         data = _user_parser.parse_args()
-        user = UserModel.find_by_name(data['username'])
+        user = UserModel.query.filter_by(data['username']).first()
 
         if user and safe_str_cmp(user.password, data['password']):
             access_token = create_access_token(identity=user.id, fresh=True)

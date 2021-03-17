@@ -23,10 +23,3 @@ class RecipeModel(db.Model):
         db.session.remove(self)
         db.session.commit()
 
-    @classmethod
-    def find_by_id(cls, recipe_id):
-        return cls.query.filter_by(id=recipe_id).first()
-
-    @classmethod
-    def find_by_title(cls, title):
-        return cls.query.filter_by(title=title).first()

@@ -7,7 +7,7 @@ class Recipe(Resource):
     @staticmethod
     @jwt_required()
     def get(recipe_id):
-        recipe = RecipeModel.find_by_id(recipe_id)
+        recipe = RecipeModel.query.filter_by(recipe_id).first()
         print(recipe.title, recipe.recipe)
 
         if recipe:
@@ -21,7 +21,7 @@ class Recipe(Resource):
     @staticmethod
     @jwt_required()
     def delete(recipe_id):
-        recipe = RecipeModel.find_by_id(recipe_id)
+        recipe = RecipeModel.query.filter_by(id=recipe_id).first()
         if recipe:
             recipe.delete_from_db()
             return recipe.json()
