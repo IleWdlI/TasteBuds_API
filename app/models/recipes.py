@@ -5,15 +5,16 @@ class RecipeModel(db.Model):
     __tablename__ = 'recipes'
 
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    title = db.Column(db.String(100))
-    recipe = db.Column(db.String)
-
-    def __init__(self, title, recipe):
-        self.title = title
-        self.recipe = recipe
+    post_type = db.Column(db.String(100))
+    recipe_source = db.Column(db.String(100))
+    link_to_recipe = db.Column(db.String(100))
+    other_notes = db.Column(db.String(200))
+    facebook = db.Column(db.Boolean)
+    twitter = db.Column(db.Boolean)
+    instagram = db.Column(db.Boolean)
 
     def json(self):
-        return {'title': self.title, 'recipe': self.recipe}
+        print(vars(self))
 
     def save_to_db(self):
         db.session.add(self)
@@ -22,4 +23,3 @@ class RecipeModel(db.Model):
     def delete_from_db(self):
         db.session.remove(self)
         db.session.commit()
-

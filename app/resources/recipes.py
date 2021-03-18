@@ -5,23 +5,20 @@ from ..models import RecipeModel
 
 class Recipe(Resource):
     @staticmethod
-    @jwt_required()
+    @jwt_required
     def get(recipe_id):
-        recipe = RecipeModel.query.filter_by(recipe_id).first()
-        print(recipe.title, recipe.recipe)
-
-        if recipe:
-            return recipe.json()
+        recipe = RecipeModel.query.get(recipe_id)
+        return vars(recipe)
 
     @staticmethod
-    @jwt_required()
+    @jwt_required
     def put(recipe_id):
         pass
 
     @staticmethod
-    @jwt_required()
+    @jwt_required
     def delete(recipe_id):
-        recipe = RecipeModel.query.filter_by(id=recipe_id).first()
+        recipe = RecipeModel.query.get(recipe_id)
         if recipe:
             recipe.delete_from_db()
             return recipe.json()
@@ -30,15 +27,19 @@ class Recipe(Resource):
 
 class CreateRecipe(Resource):
     parser = reqparse.RequestParser()
-    parser.add_argument('title', type=str, required=True)
-    parser.add_argument('recipe', type=str, required=True)
+    parser.add_argument('recipe_source', type=str, required=True)
+    parser.add_argument('link_to_recipe', type=str, required=True)
+    parser.add_argument('other_notes', type=str)
+    parser.add_argument('post_type', type=str)
+    parser.add_argument('facebook', type=bool)
+    parser.add_argument('instagram', type=bool)
+    parser.add_argument('twitter', type=bool)
 
     @staticmethod
-    @jwt_required()
+    @jwt_required
     def post():
         data = CreateRecipe.parser.parse_args()
         recipe = RecipeModel(**data)
-        print(recipe.title, recipe.recipe)
 
         recipe.save_to_db()
         return recipe.json(), 201
