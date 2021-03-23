@@ -1,4 +1,5 @@
-from flask import Flask
+import werkzeug
+from flask import Flask, jsonify
 from flask_restful import Api
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
@@ -21,5 +22,9 @@ def create_app(config=Config):
     initialize_routes(api)
     jwt.init_app(app)
     api.init_app(app)
+
+    @app.errorhandler(werkzeug.exceptions.BadRequest)
+    def handle_validation_error(e):
+        return jsonify({'error': e}), 400
 
     return app
