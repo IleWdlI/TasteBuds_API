@@ -4,13 +4,14 @@ from flask_restful import Api
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from flask_jwt_extended import JWTManager
+from flask_admin import Admin
 from config import Config
 
 api = Api()
 db = SQLAlchemy()
 migrate = Migrate()
 jwt = JWTManager()
-
+admin = Admin()
 
 def create_app(config=Config):
     from .resources import initialize_routes
@@ -22,6 +23,7 @@ def create_app(config=Config):
     initialize_routes(api)
     jwt.init_app(app)
     api.init_app(app)
+    admin.init_app(app)
 
     @app.errorhandler(werkzeug.exceptions.BadRequest)
     def handle_validation_error(e):
