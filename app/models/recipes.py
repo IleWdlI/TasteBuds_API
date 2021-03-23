@@ -1,3 +1,5 @@
+from werkzeug.security import generate_password_hash, check_password_hash
+
 from app import db
 
 
@@ -15,8 +17,15 @@ class RecipeModel(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey("users.id"))
     store = db.relationship('UserModel')
 
+    def set_password(self, password):
+        self.password = generate_password_hash(password)
+
+    def check_password(self, password):
+        return check_password_hash(self.password, password)
+
     def json(self):
         return {
+            "id": self.id,
             "post_type": self.post_type,
             "recipe_source": self.recipe_source,
             "link_to_recipe": self.link_to_recipe,
